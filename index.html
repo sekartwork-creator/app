@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายงานผู้เช่า</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="192.png">
+</head>
+<body>
+  <h1>สวัสดี! นี่คือ PWA ของคุณ</h1>
+  <p>เว็บนี้สามารถทำงานแบบ offline ได้</p>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker registered'))
+      .catch(err => console.log('Service Worker registration failed:', err));
+    }
+  </script>
+</body>
+</html>
