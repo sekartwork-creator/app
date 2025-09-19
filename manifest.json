@@ -1,7 +1,7 @@
 {
-  "name": "ระบบเช็คชื่อพนักงาน",
+  "name": "ระบบเช็คชื่อ",
   "short_name": "เช็คชื่อ",
-  "start_url": "/",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#67bb05",
