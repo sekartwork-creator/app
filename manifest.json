@@ -1,6 +1,7 @@
 {
-  "name": "ระบบเช็คชื่อ",
-  "short_name": "เช็คชื่อ",
+  "name": "ระบบเช็คชื่อเข้า-ออกงาน",
+  "short_name": "CheckInApp",
+  "description": "เช็คชื่อพนักงาน พร้อมบันทึก note",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
