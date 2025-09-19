@@ -1,67 +1,103 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบเช็คชื่อเข้า-ออกงาน</title>
-  <link rel="manifest" href="manifest.json">
-  <style>
-    body { margin:0; font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
-    #app { text-align:center; padding:30px; background:#fff; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,0.2); }
-    select, textarea { width:100%; padding:10px; margin:10px 0; font-size:1rem; border-radius:8px; border:1px solid #ccc; }
-    button { padding:15px 30px; font-size:1rem; border:none; border-radius:8px; background:#67bb05; color:#fff; cursor:pointer; }
-    button:hover { background:#57a304; }
-    #result { margin-top:15px; font-weight:bold; }
-    .success { color:green; }
-    .error { color:red; }
-  </style>
+<meta charset="UTF-8">
+<title>ระบบเช็คอินเข้า-ออกงาน</title>
+<style>
+  body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f0f0f0;
+  }
+  #mainContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .form {
+    display: flex; flex-direction: column; gap: 20px;
+    background-color: #fff; padding: 50px; border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); width: 500px;
+  }
+  select, textarea {
+    font-size: 1.5rem; padding: 10px; border-radius: 10px; border: 1.5px solid #ccc; width: 100%;
+  }
+  button {
+    font-size: 1.5rem; padding: 15px; border: none; border-radius: 10px;
+    background-color: #2d79f3; color: #fff; cursor: pointer;
+    transition: 0.2s;
+  }
+  button:hover { background-color: #1c5cd6; }
+  #result { font-size: 1.5rem; font-weight: bold; text-align: center; margin-top: 15px; }
+  .success { color: green; }
+  .error { color: red; }
+</style>
 </head>
 <body>
-  <div id="app">
-    <h2>เช็คชื่อเข้า-ออกงาน</h2>
-    <select id="employeeSelect"><option value="">-- เลือกชื่อ --</option></select>
-    <textarea id="note" placeholder="ข้อความเพิ่มเติม (ไม่บังคับ)"></textarea>
-    <button id="checkInBtn">เช็คชื่อเข้า</button>
-    <div id="result"></div>
+  <div id="mainContainer">
+    <form class="form" id="checkInForm">
+      <label>เลือกชื่อเจ้าหน้าที่</label>
+      <select id="employeeSelect"><option value="">-- เลือกชื่อ --</option></select>
+
+      <label>รายละเอียดเพิ่มเติม (ไม่บังคับ)</label>
+      <textarea id="note" placeholder="ใส่เหตุผลหรือข้อความเพิ่มเติม..."></textarea>
+
+      <button type="button" id="checkInBtn">เช็คชื่อเข้า</button>
+      <div id="result"></div>
+    </form>
   </div>
 
   <script>
-    const GAS_URL = 'https://script.google.com/macros/s/AKfycbxeI_8mx6kjznc5NuJ1u59dCP2dAFgFwLUUOHr06TjpnlKrfkg2ffMYdV1GvLGxtLEC/exec';
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeI_8mx6kjznc5NuJ1u59dCP2dAFgFwLUUOHr06TjpnlKrfkg2ffMYdV1GvLGxtLEC/exec";
 
-    // โหลดรายชื่อพนักงานจาก GAS
-    fetch(GAS_URL + '?action=getEmployees')
-      .then(res => res.json())
-      .then(data => {
-        const select = document.getElementById('employeeSelect');
-        data.forEach(emp => {
-          const option = document.createElement('option');
+    // โหลดรายชื่อพนักงาน
+    async function loadEmployees() {
+      try {
+        const res = await fetch(SCRIPT_URL + "?action=getEmployees");
+        const employees = await res.json();
+        const select = document.getElementById("employeeSelect");
+        employees.forEach(emp => {
+          const option = document.createElement("option");
           option.value = emp.id;
-          option.text = emp.id + ' - ' + emp.name;
-          select.add(option);
+          option.text = emp.id + " - " + emp.name;
+          select.appendChild(option);
         });
-      });
-
-    document.getElementById('checkInBtn').addEventListener('click', () => {
-      const select = document.getElementById('employeeSelect');
-      const staffId = select.value;
-      const name = select.options[select.selectedIndex]?.text.split(' - ').slice(1).join(' -');
-      const note = document.getElementById('note').value;
-      const resultDiv = document.getElementById('result');
-
-      if(!staffId){ resultDiv.textContent='กรุณาเลือกชื่อก่อน!'; resultDiv.className='error'; return; }
-
-      fetch(`${GAS_URL}?action=checkIn&name=${encodeURIComponent(name)}&staffId=${encodeURIComponent(staffId)}&note=${encodeURIComponent(note)}`)
-        .then(res => res.json())
-        .then(resp => {
-          resultDiv.textContent = resp.msg;
-          resultDiv.className = resp.status === 'success' ? 'success' : 'error';
-        });
-    });
-
-    // Register service worker
-    if('serviceWorker' in navigator){
-      navigator.serviceWorker.register('service-worker.js');
+      } catch(err) {
+        console.error("โหลดรายชื่อพนักงานล้มเหลว:", err);
+      }
     }
+
+    // ฟังก์ชันเช็คชื่อ
+    async function checkInEmployee() {
+      const select = document.getElementById("employeeSelect");
+      const staffId = select.value;
+      const name = select.options[select.selectedIndex].text.split(" - ").slice(1).join(" -");
+      const note = document.getElementById("note").value;
+      const resultDiv = document.getElementById("result");
+
+      if (!staffId) {
+        resultDiv.textContent = "กรุณาเลือกชื่อก่อน!";
+        resultDiv.className = "error";
+        return;
+      }
+
+      try {
+        const res = await fetch(`${SCRIPT_URL}?action=checkIn&name=${encodeURIComponent(name)}&staffId=${encodeURIComponent(staffId)}&note=${encodeURIComponent(note)}`);
+        const data = await res.json();
+        resultDiv.textContent = data.msg;
+        resultDiv.className = data.status === "success" ? "success" : "error";
+      } catch(err) {
+        resultDiv.textContent = "เกิดข้อผิดพลาด โปรดลองใหม่";
+        resultDiv.className = "error";
+        console.error(err);
+      }
+    }
+
+    document.getElementById("checkInBtn").addEventListener("click", checkInEmployee);
+
+    // เรียกโหลดพนักงานตอนเปิดหน้า
+    loadEmployees();
   </script>
 </body>
 </html>
