@@ -1,232 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>ระบบเช็คอินเข้า-ออกงาน</title>
-
-  <!-- PWA Manifest -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#151717">
-
-  <style>
-    /* === BODY === */
-    body {
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      overflow: hidden;
-    }
-
-    /* === วิดีโอ Intro === */
-    #introVideo {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 9999;
-    }
-
-    /* === Container เว็บหลัก === */
-    #mainContainer {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      width: 100%;
-      height: 100%;
-      background: url("https://firebasestorage.googleapis.com/v0/b/sekkport.appspot.com/o/646254.png?alt=media&token=224d3391-889b-44ed-8e42-3ce4a191ebb3") no-repeat center center fixed;
-      background-size: cover;
-      visibility: hidden;
-      opacity: 0;
-      transition: opacity 1s ease;
-    }
-
-    /* === FORM === */
-    .form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      background-color: #ffffff;
-      padding: 50px;
-      width: 900px;
-      border-radius: 30px;
-      margin-bottom: 130px;
-    }
-
-    .flex-column > label {
-      color: #151717;
-      font-weight: 700;
-      font-size: 32px;
-    }
-
-    .inputForm {
-      border: 1.5px solid #ecedec;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      padding-left: 10px;
-      transition: 0.2s ease-in-out;
-    }
-
-    .large-input {
-      font-size: 2.5rem;
-      border: none;
-      border-radius: 10px;
-      width: 100%;
-      background: transparent;
-      padding: 0 15px;
-      box-sizing: border-box;
-    }
-
-    select.large-input { height: 80px; }
-    textarea.large-input { height: 150px; padding: 15px; resize: vertical; }
-
-    .inputForm:focus-within { border: 1.5px solid #2d79f3; }
-
-    .button-submit {
-      margin: 30px 0 20px 0;
-      background-color: #151717;
-      border: none;
-      color: white;
-      font-size: 40px;
-      font-weight: 700;
-      border-radius: 12px;
-      height: 80px;
-      width: 100%;
-      cursor: pointer;
-      transition: 0.2s ease-in-out;
-    }
-    .button-submit:hover { background-color: #252727; }
-
-    #result { text-align: center; margin-top: 24px; font-weight: bold; font-size: 48px; }
-    .success { color: green; }
-    .error { color: red; }
-
-    .note-inputForm {
-      border: 1.5px solid #ecedec;
-      border-radius: 12px;
-      display: flex;
-      align-items: flex-start;
-      padding: 0;
-      height: 180px;
-      box-sizing: border-box;
-      transition: 0.2s ease-in-out;
-    }
-    .note-textarea {
-      font-size: 2rem;
-      border: none;
-      border-radius: 12px;
-      width: 100%;
-      background: transparent;
-      padding: 15px;
-      box-sizing: border-box;
-      resize: vertical;
-      outline: none;
-    }
-    .note-inputForm:focus-within { border: 1.5px solid #2d79f3; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เช็คชื่อพนักงาน</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  body{margin:0;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;background:#f0f0f0;}
+  .form-container{background:#fff;padding:40px;border-radius:20px;width:90%;max-width:500px;box-shadow:0 4px 12px rgba(0,0,0,0.15);}
+  select, textarea, button{width:100%;padding:12px;margin:10px 0;border-radius:10px;border:1px solid #ccc;font-size:16px;}
+  button{background:#67bb05;color:#fff;border:none;font-size:20px;font-weight:bold;cursor:pointer;}
+  button:hover{background:#57a304;}
+  #result{margin-top:20px;font-weight:bold;text-align:center;}
+  .success{color:green;}
+  .error{color:red;}
+</style>
 </head>
 <body>
 
-  <!-- วิดีโอ Intro -->
-  <video autoplay muted playsinline preload="auto" id="introVideo">
-    <source src="https://firebasestorage.googleapis.com/v0/b/sekkport.appspot.com/o/download%20(1).mp4?alt=media&token=1b3737eb-e095-4791-8142-ffef52b963d0" type="video/mp4">
-    เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
-  </video>
+<div class="form-container">
+  <h2>เช็คชื่อพนักงาน</h2>
+  <select id="employeeSelect"><option value="">-- เลือกชื่อ --</option></select>
+  <textarea id="note" placeholder="รายละเอียดเพิ่มเติม (ไม่บังคับ)"></textarea>
+  <button onclick="checkInEmployee()">เช็คชื่อ</button>
+  <div id="result"></div>
+</div>
 
-  <!-- Container เว็บหลัก -->
-  <div id="mainContainer">
-    <form class="form" id="checkInForm">
-      <div class="flex-column">
-        <label>เลือกชื่อเจ้าหน้าที่</label>
-      </div>
-      <div class="inputForm">
-        <select class="large-input" id="employeeSelect">
-          <option value="">-- เลือกชื่อ --</option>
-        </select>
-      </div>
+<script>
+  // โหลดพนักงาน
+  fetch("?action=getEmployees")
+    .then(res=>res.json())
+    .then(data=>{
+      const select=document.getElementById("employeeSelect");
+      data.forEach(emp=>{
+        const option=document.createElement("option");
+        option.value=emp.id;
+        option.text=emp.id+" - "+emp.name;
+        select.appendChild(option);
+      });
+    });
 
-      <div class="flex-column">
-        <label>รายละเอียดเพิ่มเติม (ไม่บังคับ)</label>
-      </div>
-      <div class="inputForm">
-        <textarea class="large-input" id="note" placeholder="ใส่เหตุผลหรือข้อความเพิ่มเติม..."></textarea>
-      </div>
+  // ฟังก์ชันเช็คชื่อ
+  function checkInEmployee(){
+    const select=document.getElementById("employeeSelect");
+    const staffId=select.value;
+    const name=select.options[select.selectedIndex].text.split(" - ").slice(1).join(" -");
+    const note=document.getElementById("note").value;
+    if(!staffId){document.getElementById("result").textContent="กรุณาเลือกชื่อ!";document.getElementById("result").className="error";return;}
+    fetch(`?action=checkIn&name=${encodeURIComponent(name)}&staffId=${encodeURIComponent(staffId)}&note=${encodeURIComponent(note)}`)
+      .then(res=>res.json())
+      .then(resp=>{
+        const r=document.getElementById("result");
+        r.textContent=resp.msg;
+        r.className=resp.status==="success"?"success":"error";
+      });
+  }
 
-      <button type="button" class="button-submit" onclick="checkInEmployee()">เช็คชื่อเข้า</button>
-      <div id="result"></div>
-    </form>
-
-    <audio id="successSound" src="https://firebasestorage.googleapis.com/v0/b/sekkport.appspot.com/o/new-notification-015-363677.mp3?alt=media&token=74f2ee1e-021a-4306-9d18-fcbe5d06291b"></audio>
-    <audio id="errorSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
-  </div>
-
-  <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxeI_8mx6kjznc5NuJ1u59dCP2dAFgFwLUUOHr06TjpnlKrfkg2ffMYdV1GvLGxtLEC/exec";
-
-    const intro = document.getElementById("introVideo");
-    const main = document.getElementById("mainContainer");
-    intro.onended = function() {
-      intro.remove();
-      main.style.visibility = "visible";
-      main.style.opacity = "1";
-    };
-
-    // โหลดรายชื่อพนักงาน
-    async function loadEmployees() {
-      try {
-        const res = await fetch(WEB_APP_URL + "?action=getEmployees");
-        const employees = await res.json();
-        const select = document.getElementById("employeeSelect");
-        employees.forEach(emp => {
-          const option = document.createElement("option");
-          option.value = emp.id;
-          option.text = emp.id + " - " + emp.name;
-          select.appendChild(option);
-        });
-      } catch(err) {
-        console.error("โหลดรายชื่อพนักงานผิดพลาด", err);
-      }
-    }
-
-    // เช็คชื่อ
-    async function checkInEmployee() {
-      const select = document.getElementById("employeeSelect");
-      const staffId = select.value;
-      const name = select.options[select.selectedIndex].text.split(" - ").slice(1).join(" -");
-      const note = document.getElementById("note").value;
-      const resultDiv = document.getElementById("result");
-
-      if(!staffId){
-        resultDiv.textContent = "กรุณาเลือกชื่อก่อน!";
-        resultDiv.className = "error";
-        document.getElementById("errorSound").play();
-        return;
-      }
-
-      try {
-        const res = await fetch(WEB_APP_URL + "?action=checkIn&name=" + encodeURIComponent(name) + "&staffId=" + encodeURIComponent(staffId) + "&note=" + encodeURIComponent(note));
-        const response = await res.json();
-        resultDiv.textContent = response.msg;
-        resultDiv.className = response.status === "success" ? "success" : "error";
-        if(response.status === "success") document.getElementById("successSound").play();
-        else document.getElementById("errorSound").play();
-      } catch(err){
-        resultDiv.textContent = "เกิดข้อผิดพลาด!";
-        resultDiv.className = "error";
-        document.getElementById("errorSound").play();
-      }
-    }
-
-    loadEmployees();
-
-    // register service worker
-    if("serviceWorker" in navigator){
-      navigator.serviceWorker.register("./service-worker.js")
-        .then(()=>console.log("Service Worker registered"));
-    }
-  </script>
+  // ลงทะเบียน Service Worker
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('service-worker.js').then(()=>console.log('SW registered'));
+  }
+</script>
 </body>
 </html>
