@@ -1,65 +1,34 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เช็คชื่อพนักงาน</title>
-<link rel="manifest" href="manifest.json">
-<style>
-  body{margin:0;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;background:#f0f0f0;}
-  .form-container{background:#fff;padding:40px;border-radius:20px;width:90%;max-width:500px;box-shadow:0 4px 12px rgba(0,0,0,0.15);}
-  select, textarea, button{width:100%;padding:12px;margin:10px 0;border-radius:10px;border:1px solid #ccc;font-size:16px;}
-  button{background:#67bb05;color:#fff;border:none;font-size:20px;font-weight:bold;cursor:pointer;}
-  button:hover{background:#57a304;}
-  #result{margin-top:20px;font-weight:bold;text-align:center;}
-  .success{color:green;}
-  .error{color:red;}
-</style>
-</head>
-<body>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeI_8mx6kjznc5NuJ1u59dCP2dAFgFwLUUOHr06TjpnlKrfkg2ffMYdV1GvLGxtLEC/exec";
 
-<div class="form-container">
-  <h2>เช็คชื่อพนักงาน</h2>
-  <select id="employeeSelect"><option value="">-- เลือกชื่อ --</option></select>
-  <textarea id="note" placeholder="รายละเอียดเพิ่มเติม (ไม่บังคับ)"></textarea>
-  <button onclick="checkInEmployee()">เช็คชื่อ</button>
-  <div id="result"></div>
-</div>
+// ดึงรายชื่อพนักงาน
+async function loadEmployees() {
+  const res = await fetch(SCRIPT_URL + "?action=getEmployees");
+  const employees = await res.json();
+  const select = document.getElementById("employeeSelect");
+  employees.forEach(emp => {
+    const option = document.createElement("option");
+    option.value = emp.id;
+    option.text = emp.id + " - " + emp.name;
+    select.appendChild(option);
+  });
+}
 
-<script>
-  // โหลดพนักงาน
-  fetch("?action=getEmployees")
-    .then(res=>res.json())
-    .then(data=>{
-      const select=document.getElementById("employeeSelect");
-      data.forEach(emp=>{
-        const option=document.createElement("option");
-        option.value=emp.id;
-        option.text=emp.id+" - "+emp.name;
-        select.appendChild(option);
-      });
-    });
+// เช็คชื่อ
+async function checkInEmployee() {
+  const select = document.getElementById("employeeSelect");
+  const staffId = select.value;
+  const name = select.options[select.selectedIndex].text.split(" - ").slice(1).join(" -");
+  const note = document.getElementById("note").value;
+  const resultDiv = document.getElementById("result");
 
-  // ฟังก์ชันเช็คชื่อ
-  function checkInEmployee(){
-    const select=document.getElementById("employeeSelect");
-    const staffId=select.value;
-    const name=select.options[select.selectedIndex].text.split(" - ").slice(1).join(" -");
-    const note=document.getElementById("note").value;
-    if(!staffId){document.getElementById("result").textContent="กรุณาเลือกชื่อ!";document.getElementById("result").className="error";return;}
-    fetch(`?action=checkIn&name=${encodeURIComponent(name)}&staffId=${encodeURIComponent(staffId)}&note=${encodeURIComponent(note)}`)
-      .then(res=>res.json())
-      .then(resp=>{
-        const r=document.getElementById("result");
-        r.textContent=resp.msg;
-        r.className=resp.status==="success"?"success":"error";
-      });
+  if (!staffId) {
+    resultDiv.textContent = "กรุณาเลือกชื่อก่อน!";
+    resultDiv.className = "error";
+    return;
   }
 
-  // ลงทะเบียน Service Worker
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('service-worker.js').then(()=>console.log('SW registered'));
-  }
-</script>
-</body>
-</html>
+  const res = await fetch(`${SCRIPT_URL}?action=checkIn&name=${encodeURIComponent(name)}&staffId=${encodeURIComponent(staffId)}&note=${encodeURIComponent(note)}`);
+  const data = await res.json();
+  resultDiv.textContent = data.msg;
+  resultDiv.className = data.status === "success" ? "success" : "error";
+}
