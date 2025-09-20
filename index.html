@@ -149,14 +149,16 @@
   let selectedStaffId = '';
   let selectedStaffName = '';
 
+  // โหลดรายชื่อพนักงานจาก GAS
   function loadEmployees() {
     fetch(`${deploymentURL}?action=getEmployees`)
       .then(res => res.json())
       .then(data => {
         const list = document.getElementById('employeeList');
+        list.innerHTML = ''; // ล้างก่อน
         data.forEach(emp => {
           const div = document.createElement('div');
-          div.textContent = emp.name + " - " + emp.id;
+          div.textContent = emp.name;
           div.dataset.id = emp.id;
           div.dataset.name = emp.name;
           div.onclick = () => {
@@ -167,14 +169,17 @@
           };
           list.appendChild(div);
         });
-      });
+      })
+      .catch(err => console.error('Error loading employees:', err));
   }
 
+  // สลับการแสดง dropdown
   document.getElementById('dropdownBtn').onclick = () => {
     const list = document.getElementById('employeeList');
     list.style.display = list.style.display === 'block' ? 'none' : 'block';
   }
 
+  // ฟังก์ชันเช็คชื่อ
   function checkInEmployee() {
     const note = document.getElementById('note').value;
     const resultDiv = document.getElementById('result');
@@ -199,6 +204,7 @@
       });
   }
 
+  // โหลดรายชื่อพนักงานเมื่อเริ่มต้น
   loadEmployees();
 </script>
 </body>
