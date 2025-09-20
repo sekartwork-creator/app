@@ -107,18 +107,21 @@
 </head>
 <body>
 
+  
+<div class="select">
   <h2>เช็คชื่อพนักงาน</h2>
 
   <div class="login-line">Log in with LINE Business ID</div>
 
-  <select id="employeeList">
-    <option value="">-- เลือกชื่อเจ้าหน้าที่ --</option>
-    <!-- รายชื่อพนักงานจาก script -->
-  </select>
+  <div class="dropdown" style="position: relative;">
+    <div class="dropdown-btn" id="dropdownBtn">-- เลือกชื่อเจ้าหน้าที่ --</div>
+    <div class="dropdown-content" id="employeeList">
+      <!-- รายชื่อพนักงานจะใส่ script -->
+    </div>
+  </div>
 
   <textarea id="note" placeholder="รายละเอียดเพิ่มเติม (ไม่บังคับ)"></textarea>
-
-  <button class="btn">เช็คชื่อเข้า</button>
+  <button class="btn" onclick="checkInEmployee()">เช็คชื่อเข้า</button>
   <div id="result"></div>
 
   <footer>
@@ -128,6 +131,7 @@
       <a href="#">Terms of Use</a>
     </div>
   </footer>
+</div>
 
 
 
@@ -196,6 +200,7 @@
 </script>
 </body>
 </html>
+
 
 
 
