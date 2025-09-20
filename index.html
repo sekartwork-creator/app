@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ระบบเช็คชื่อเข้า-ออกงาน</title>
+<title>ระบบเช็คชื่อพนักงาน</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap');
 
@@ -11,8 +11,7 @@
     margin: 0;
     padding: 0;
     font-family: 'Kanit', sans-serif;
-    background: linear-gradient(135deg, #06C755, #67BB05);
-    color: #111;
+    background-color: #ffffff; /* เปลี่ยนเป็นพื้นหลังขาว */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,40 +19,35 @@
   }
 
   .card {
-    width: 95%;
-    max-width: 500px;
-    background-color: #fff;
-    border-radius: 20px;
-    padding: 30px 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    width: 100%;
+    height: 100vh; /* เต็มจอ mobile */
+    background-color: #ffffff;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    animation: fadeIn 0.8s ease;
-  }
-
-  @keyframes fadeIn {
-    from {opacity:0; transform: translateY(20px);}
-    to {opacity:1; transform: translateY(0);}
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
   }
 
   h2 {
     text-align: center;
     color: #06C755;
     font-weight: 700;
+    margin-bottom: 20px;
   }
 
   .dropdown {
     position: relative;
     width: 100%;
+    margin-bottom: 15px;
   }
 
   .dropdown-btn {
     width: 100%;
-    padding: 15px 20px;
+    padding: 15px;
     border-radius: 12px;
     border: 1px solid #ccc;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     cursor: pointer;
     background-color: #f9f9f9;
     transition: 0.3s;
@@ -69,7 +63,7 @@
     top: 100%;
     left: 0;
     width: 100%;
-    max-height: 200px;
+    max-height: 250px;
     overflow-y: auto;
     background-color: #fff;
     border: 1px solid #ccc;
@@ -79,7 +73,7 @@
   }
 
   .dropdown-content div {
-    padding: 12px 20px;
+    padding: 12px 15px;
     cursor: pointer;
     transition: 0.2s;
   }
@@ -96,10 +90,12 @@
     border: 1px solid #ccc;
     font-size: 1rem;
     resize: vertical;
-    height: 120px;
+    min-height: 100px;
+    margin-bottom: 15px;
   }
 
   .btn {
+    width: 100%;
     padding: 15px;
     border-radius: 12px;
     border: none;
@@ -119,10 +115,12 @@
     text-align: center;
     font-size: 1.2rem;
     font-weight: 700;
+    margin-top: 15px;
   }
 
   .success { color: green; }
   .error { color: red; }
+
 </style>
 </head>
 <body>
@@ -149,13 +147,12 @@
   let selectedStaffId = '';
   let selectedStaffName = '';
 
-  // โหลดรายชื่อพนักงานจาก GAS
   function loadEmployees() {
     fetch(`${deploymentURL}?action=getEmployees`)
       .then(res => res.json())
       .then(data => {
         const list = document.getElementById('employeeList');
-        list.innerHTML = ''; // ล้างก่อน
+        list.innerHTML = '';
         data.forEach(emp => {
           const div = document.createElement('div');
           div.textContent = emp.name;
@@ -169,17 +166,14 @@
           };
           list.appendChild(div);
         });
-      })
-      .catch(err => console.error('Error loading employees:', err));
+      });
   }
 
-  // สลับการแสดง dropdown
   document.getElementById('dropdownBtn').onclick = () => {
     const list = document.getElementById('employeeList');
     list.style.display = list.style.display === 'block' ? 'none' : 'block';
   }
 
-  // ฟังก์ชันเช็คชื่อ
   function checkInEmployee() {
     const note = document.getElementById('note').value;
     const resultDiv = document.getElementById('result');
@@ -204,7 +198,6 @@
       });
   }
 
-  // โหลดรายชื่อพนักงานเมื่อเริ่มต้น
   loadEmployees();
 </script>
 </body>
