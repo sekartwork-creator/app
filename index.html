@@ -4,188 +4,153 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ระบบเช็คชื่อเข้า-ออกงาน</title>
-
-  <!-- Manifest -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#67bb05">
-
   <style>
-    /* ====== รีเซ็ต + ฟอนต์ ====== */
+    /* ===== Reset ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      margin: 0;
-      font-family: "Sarabun", sans-serif;
-      background: #f5f5f5;
-      color: #333;
+      font-family: 'Kanit', sans-serif;
+      background-color: #f9f9f9;
+      color: #111;
+      line-height: 1.6;
     }
 
+    /* ===== Header ===== */
     header {
-      background: #67bb05;
-      color: white;
+      background-color: #06C755;
+      color: #fff;
       text-align: center;
-      padding: 1rem;
-      font-size: 1.2rem;
-      font-weight: bold;
+      padding: 20px;
     }
+    header h1 { font-size: 1.8rem; }
 
-    main {
-      padding: 1rem;
+    /* ===== Main Container ===== */
+    #mainContainer {
       max-width: 480px;
-      margin: auto;
-    }
-
-    .card {
-      background: white;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
       border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
-    }
-
-    input, textarea, button {
+    .form-group { margin-bottom: 16px; }
+    label { font-weight: 600; display: block; margin-bottom: 6px; }
+    select, textarea, input {
       width: 100%;
-      padding: 0.8rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      padding: 12px;
       font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #fff;
     }
+    select:focus, textarea:focus, input:focus { border-color: #06C755; outline: none; }
 
     button {
-      background: #67bb05;
-      color: white;
+      width: 100%;
+      padding: 16px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      background-color: #06C755;
+      color: #fff;
       border: none;
-      font-weight: bold;
+      border-radius: 12px;
       cursor: pointer;
       transition: 0.2s;
     }
+    button:hover { background-color: #049645; }
 
-    button:hover {
-      background: #5ca304;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 0.6rem;
-      text-align: center;
-    }
-
-    th {
-      background: #67bb05;
-      color: white;
-    }
+    #result { text-align: center; margin-top: 20px; font-weight: bold; font-size: 1.2rem; }
+    .success { color: green; }
+    .error { color: red; }
   </style>
 </head>
 <body>
-  <header>ระบบเช็คชื่อเข้า-ออกงาน</header>
 
-  <main>
-    <!-- ฟอร์มเช็คชื่อ -->
-    <div class="card">
-      <label for="name">ชื่อพนักงาน</label>
-      <input type="text" id="name" placeholder="กรอกชื่อ">
+  <header>
+    <h1>ระบบเช็คชื่อเข้า-ออกงาน</h1>
+  </header>
 
-      <label for="note">บันทึกเพิ่มเติม</label>
-      <textarea id="note" rows="3" placeholder="ใส่ note ถ้ามี..."></textarea>
-
-      <button onclick="checkIn()">เช็คชื่อเข้า</button>
-      <button onclick="checkOut()">เช็คชื่อออก</button>
+  <div id="mainContainer">
+    <!-- เลือกพนักงาน -->
+    <div class="form-group">
+      <label for="employeeSelect">เลือกพนักงาน</label>
+      <select id="employeeSelect">
+        <option value="">-- เลือกชื่อ --</option>
+      </select>
     </div>
 
-    <!-- ประวัติการเช็คชื่อ -->
-    <div class="card">
-      <h3>ประวัติการเช็คชื่อ</h3>
-      <table id="historyTable">
-        <thead>
-          <tr>
-            <th>ชื่อ</th>
-            <th>สถานะ</th>
-            <th>เวลา</th>
-            <th>Note</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <!-- บันทึกเพิ่มเติม -->
+    <div class="form-group">
+      <label for="note">รายละเอียดเพิ่มเติม (ไม่บังคับ)</label>
+      <textarea id="note" rows="4" placeholder="ใส่เหตุผลหรือข้อความเพิ่มเติม..."></textarea>
     </div>
-  </main>
+
+    <!-- ปุ่มเช็คชื่อ -->
+    <button onclick="sendCheckIn()">เช็คชื่อเข้า</button>
+
+    <!-- แสดงผลลัพธ์ -->
+    <div id="result"></div>
+  </div>
+
+  <!-- เสียงแจ้งเตือน -->
+  <audio id="successSound" src="https://firebasestorage.googleapis.com/v0/b/sekkport.appspot.com/o/new-notification-015-363677.mp3?alt=media&token=74f2ee1e-021a-4306-9d18-fcbe5d06291b"></audio>
+  <audio id="errorSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
 
   <script>
-    // โหลดประวัติจาก localStorage
-    document.addEventListener("DOMContentLoaded", loadHistory);
+    const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec"; // เปลี่ยนเป็น URL ของคุณ
 
-    function getTime() {
-      const now = new Date();
-      return now.toLocaleString("th-TH");
+    // โหลดรายชื่อพนักงานจาก Google Apps Script
+    async function loadEmployees() {
+      try {
+        const res = await fetch(API_URL + "?action=getEmployees");
+        const employees = await res.json();
+        const select = document.getElementById("employeeSelect");
+        employees.forEach(emp => {
+          const option = document.createElement("option");
+          option.value = emp.id;
+          option.textContent = emp.name;
+          select.appendChild(option);
+        });
+      } catch(err) {
+        console.error("ไม่สามารถโหลดรายชื่อพนักงานได้:", err);
+      }
     }
 
-    function addRecord(name, status, note) {
-      const table = document.querySelector("#historyTable tbody");
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${name}</td>
-        <td>${status}</td>
-        <td>${getTime()}</td>
-        <td>${note || "-"}</td>
-      `;
-      table.prepend(row);
+    // ส่งเช็คชื่อ
+    async function sendCheckIn() {
+      const select = document.getElementById("employeeSelect");
+      const staffId = select.value;
+      const name = select.options[select.selectedIndex].text;
+      const note = document.getElementById("note").value;
+      const resultDiv = document.getElementById("result");
 
-      // เก็บลง localStorage
-      const history = JSON.parse(localStorage.getItem("checkinHistory")) || [];
-      history.unshift({ name, status, time: getTime(), note });
-      localStorage.setItem("checkinHistory", JSON.stringify(history));
+      if(!staffId) {
+        resultDiv.textContent = "กรุณาเลือกชื่อพนักงาน";
+        resultDiv.className = "error";
+        document.getElementById("errorSound").play();
+        return;
+      }
+
+      try {
+        const res = await fetch(API_URL + `?action=checkIn&name=${encodeURIComponent(name)}&staffId=${encodeURIComponent(staffId)}&note=${encodeURIComponent(note)}`);
+        const data = await res.json();
+        resultDiv.textContent = data.msg;
+        resultDiv.className = data.status === "success" ? "success" : "error";
+        if(data.status === "success") {
+          document.getElementById("successSound").play();
+        } else {
+          document.getElementById("errorSound").play();
+        }
+      } catch(err) {
+        console.error(err);
+        resultDiv.textContent = "เกิดข้อผิดพลาดในการเช็คชื่อ";
+        resultDiv.className = "error";
+        document.getElementById("errorSound").play();
+      }
     }
 
-    function loadHistory() {
-      const history = JSON.parse(localStorage.getItem("checkinHistory")) || [];
-      const table = document.querySelector("#historyTable tbody");
-      table.innerHTML = "";
-      history.forEach(record => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${record.name}</td>
-          <td>${record.status}</td>
-          <td>${record.time}</td>
-          <td>${record.note || "-"}</td>
-        `;
-        table.appendChild(row);
-      });
-    }
-
-    function checkIn() {
-      const name = document.getElementById("name").value.trim();
-      const note = document.getElementById("note").value.trim();
-      if (!name) return alert("กรุณากรอกชื่อ");
-      addRecord(name, "เข้า", note);
-      document.getElementById("note").value = "";
-    }
-
-    function checkOut() {
-      const name = document.getElementById("name").value.trim();
-      const note = document.getElementById("note").value.trim();
-      if (!name) return alert("กรุณากรอกชื่อ");
-      addRecord(name, "ออก", note);
-      document.getElementById("note").value = "";
-    }
-
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-          .then(reg => console.log('Service Worker ลงทะเบียนแล้ว:', reg))
-          .catch(err => console.log('Service Worker error:', err));
-      });
-    }
+    // เรียกใช้ฟังก์ชันโหลดพนักงานเมื่อหน้าโหลด
+    loadEmployees();
   </script>
 </body>
 </html>
