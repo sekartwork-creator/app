@@ -1,104 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>ระบบเช็คอินเข้า-ออกงาน</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Theme</title>
   <style>
-    body { margin:0; padding:0; font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:#f4f4f4; }
-    .form { display:flex; flex-direction:column; gap:20px; background:#fff; padding:40px; border-radius:20px; width:500px; }
-    select, textarea, button { width:100%; padding:15px; border-radius:10px; border:1px solid #ccc; font-size:18px; }
-    button { background:#67bb05; color:#fff; border:none; cursor:pointer; transition:0.3s; }
-    button:hover { background:#57a304; }
-    #result { font-size:20px; font-weight:bold; text-align:center; }
-    .success { color:green; }
-    .error { color:red; }
+    body {
+      margin: 0;
+      font-family: "Sarabun", sans-serif;
+      background: #f5f7fa;
+      color: #222;
+    }
+
+    /* Header */
+    .app-header {
+      background: #4a90e2;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    /* Container */
+    .app-container {
+      padding: 1rem;
+      margin-bottom: 4rem; /* กัน bottom-nav ทับ */
+    }
+
+    /* Card */
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .card h2 {
+      margin: 0 0 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #ddd;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.5rem 0;
+    }
+
+    .bottom-nav a {
+      text-decoration: none;
+      color: #4a90e2;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive (Mobile First) */
+    @media (min-width: 768px) {
+      .card {
+        max-width: 600px;
+        margin: 1rem auto;
+      }
+    }
   </style>
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#67bb05">
 </head>
 <body>
+  <header class="app-header">
+    🌟 แอปของเรา
+  </header>
 
-  <form class="form" id="checkInForm">
-    <select id="employeeSelect">
-      <option value="">-- เลือกชื่อ --</option>
-    </select>
+  <main class="app-container">
+    <section class="card">
+      <h2>เมนูที่ 1</h2>
+      <p>รายละเอียดของเมนูนี้</p>
+    </section>
 
-    <textarea id="note" placeholder="ใส่เหตุผลหรือข้อความเพิ่มเติม..."></textarea>
-    <button type="button" onclick="checkInEmployee()">เช็คชื่อเข้า</button>
-    <div id="result"></div>
-  </form>
+    <section class="card">
+      <h2>เมนูที่ 2</h2>
+      <p>รายละเอียดของเมนูนี้</p>
+    </section>
 
-<script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxeI_8mx6kjznc5NuJ1u59dCP2dAFgFwLUUOHr06TjpnlKrfkg2ffMYdV1GvLGxtLEC/exec";
+    <section class="card">
+      <h2>เมนูที่ 3</h2>
+      <p>รายละเอียดของเมนูนี้</p>
+    </section>
+  </main>
 
-// โหลดรายชื่อพนักงาน
-async function loadEmployees() {
-  try {
-    const res = await fetch(SCRIPT_URL + "?action=getEmployees");
-    if (!res.ok) throw new Error("ไม่สามารถโหลดรายชื่อพนักงานได้");
-    const employees = await res.json();
-    const select = document.getElementById("employeeSelect");
-    
-    // เพิ่ม option เริ่มต้น
-    select.innerHTML = '<option value="">-- เลือกชื่อ --</option>';
-
-    employees.forEach(emp => {
-      const option = document.createElement("option");
-      option.value = emp.id;
-      option.text = `${emp.id} - ${emp.name}`;
-      select.appendChild(option);
-    });
-  } catch (err) {
-    console.error(err);
-    alert("เกิดข้อผิดพลาดในการโหลดรายชื่อพนักงาน");
-  }
-}
-
-// เช็คชื่อพนักงาน
-async function checkInEmployee() {
-  const select = document.getElementById("employeeSelect");
-  const staffId = select.value;
-  const fullText = select.options[select.selectedIndex].text;
-  const name = fullText.includes(" - ") ? fullText.split(" - ").slice(1).join(" -") : fullText;
-  const note = document.getElementById("note").value;
-  const resultDiv = document.getElementById("result");
-
-  if (!staffId) {
-    resultDiv.textContent = "กรุณาเลือกชื่อก่อน!";
-    resultDiv.className = "error";
-    return;
-  }
-
-  try {
-    const res = await fetch(`${SCRIPT_URL}?action=checkIn&name=${encodeURIComponent(name)}&staffId=${encodeURIComponent(staffId)}&note=${encodeURIComponent(note)}`);
-    if (!res.ok) throw new Error("ไม่สามารถเช็คชื่อได้");
-    const data = await res.json();
-
-    resultDiv.textContent = data.msg;
-    resultDiv.className = data.status === "success" ? "success" : "error";
-
-    // เล่นเสียง
-    if (data.status === "success") {
-      document.getElementById("successSound")?.play();
-    } else {
-      document.getElementById("errorSound")?.play();
-    }
-  } catch (err) {
-    console.error(err);
-    resultDiv.textContent = "เกิดข้อผิดพลาดในการเช็คชื่อ";
-    resultDiv.className = "error";
-    document.getElementById("errorSound")?.play();
-  }
-}
-
-// เรียกโหลดพนักงานทันที
-loadEmployees();
-</script>
-
+  <nav class="bottom-nav">
+    <a href="#">🏠 Home</a>
+    <a href="#">📊 รายงาน</a>
+    <a href="#">⚙️ ตั้งค่า</a>
+  </nav>
 </body>
 </html>
-
-
-
-
