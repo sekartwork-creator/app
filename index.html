@@ -8,159 +8,158 @@
   @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap');
 
   /* ===== Body ===== */
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Kanit', sans-serif;
-    background-color: #fff;
-    overflow: hidden; /* ไม่ให้เลื่อน */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Kanit', sans-serif;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
 
-  /* ===== Card ===== */
-  .card {
-    width: 100%;
-    max-width: 500px;
-    height: 100vh;
-    box-sizing: border-box;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 15px;
-    background-color: #fff;
-  }
+/* ===== Card ===== */
+.card {
+  width: 95%;
+  max-width: 500px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
 
-  h2 {
-    text-align: center;
-    color: #06C755;
-    font-weight: 700;
-    margin-top: 0;
-  }
+/* ===== Header ===== */
+h2 {
+  text-align: center;
+  color: #06C755;
+  font-weight: 700;
+  margin-top: 0;
+}
 
-  /* ===== LINE Login ===== */
-  .login-line {
-    width: 100%;
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    text-align: left;
-    background-color: #f9f9f9;
-    color: #000;
-    font-weight: 700;
-    box-sizing: border-box;
-  }
+/* ===== LINE Login ===== */
+.login-line {
+  font-weight: 700;
+  color: #000;
+  text-align: left;
+  padding-left: 0;
+  margin-bottom: 10px;
+  background: none; /* ไม่มีกรอบ */
+  border: none;
+}
 
-  /* ===== Dropdown ===== */
-  .dropdown {
-    position: relative;
-    width: 100%;
-  }
+/* ===== Dropdown ===== */
+.dropdown {
+  position: relative;
+  width: 100%;
+}
 
-  .dropdown-btn {
-    width: 100%;
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    cursor: pointer;
-    background-color: #f9f9f9;
-    box-sizing: border-box;
-  }
+.dropdown-btn {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+}
 
-  .dropdown-btn:hover {
-    background-color: #e0f4d9;
-  }
+.dropdown-btn:hover {
+  background-color: #e0f4d9;
+}
 
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    z-index: 100;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  }
+.dropdown-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  z-index: 100;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
 
-  .dropdown-content div {
-    padding: 12px 20px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
+.dropdown-content div {
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: 0.2s;
+}
 
-  .dropdown-content div:hover {
-    background-color: #06C755;
-    color: #fff;
-  }
+.dropdown-content div:hover {
+  background-color: #06C755;
+  color: #fff;
+}
 
-  /* ===== Textarea ===== */
-  textarea {
-    width: 100%;
-    padding: 15px;
-    border-radius: 12px;
-    border: 1px solid #ccc;
-    font-size: 1rem;
-    resize: none;
-    box-sizing: border-box;
-    height: 120px;
-  }
+/* ===== Textarea ===== */
+textarea {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  resize: none;
+  height: 120px;
+  box-sizing: border-box;
+}
 
-  /* ===== Button ===== */
-  .btn {
-    padding: 15px;
-    border-radius: 12px;
-    border: none;
-    background-color: #06C755;
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.3s;
-  }
+/* ===== Button ===== */
+.btn {
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  background-color: #06C755;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s;
+}
 
-  .btn:hover {
-    background-color: #049645;
-  }
+.btn:hover {
+  background-color: #049645;
+}
 
-  /* ===== Result ===== */
-  #result {
-    text-align: center;
-    font-size: 1.2rem;
-    font-weight: 700;
-  }
+/* ===== Result ===== */
+#result {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
 
-  .success { color: green; }
-  .error { color: red; }
+.success { color: green; }
+.error { color: red; }
 
-  /* ===== Footer ===== */
-  footer {
-    margin-top: auto;
-    font-size: 0.85rem;
-    color: #666;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    text-align: center;
-  }
+/* ===== Footer ===== */
+footer {
+  margin-top: auto;
+  font-size: 0.85rem;
+  color: #666;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: center;
+}
 
-  footer a {
-    color: #06C755;
-    text-decoration: none;
-    margin: 0 5px;
-  }
+footer a {
+  color: #06C755;
+  text-decoration: none;
+  margin: 0 5px;
+}
 
-  footer a:hover {
-    text-decoration: underline;
-  }
+footer a:hover {
+  text-decoration: underline;
+}
+
 </style>
 </head>
 <body>
@@ -254,5 +253,6 @@
 </script>
 </body>
 </html>
+
 
 
