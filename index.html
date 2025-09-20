@@ -1,163 +1,215 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ระบบเช็คชื่อเข้า-ออกงาน</title>
-<style>
-/* === Reset / Body === */
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family: 'Kanit', sans-serif; background:#f9f9f9; color:#111; line-height:1.6; overflow:hidden; height:100vh; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบเช็คชื่อเข้า-ออกงาน</title>
+  <style>
+    /* ===== BODY ===== */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Kanit', sans-serif;
+      background-color: #f5f5f5;
+      color: #111;
+    }
 
-/* === Video Intro === */
-#introVideo {
-  position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index:9999;
-}
+    /* ===== Container หลัก ===== */
+    #mainContainer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
 
-/* === Main Container === */
-#mainContainer {
-  display:flex; justify-content:center; align-items:flex-end;
-  width:100%; height:100%;
-  background:url("https://firebasestorage.googleapis.com/v0/b/sekkport.appspot.com/o/646254.png?alt=media&token=224d3391-889b-44ed-8e42-3ce4a191ebb3") no-repeat center center fixed;
-  background-size:cover;
-  visibility:hidden; opacity:0; transition:opacity 1s ease;
-}
+    /* ===== Card ===== */
+    .feature-card {
+      width: 100%;
+      max-width: 500px; /* mobile friendly */
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
-/* === Form === */
-.form {
-  display:flex; flex-direction:column; gap:20px;
-  background-color:#fff; padding:40px; width:90%; max-width:450px; border-radius:20px; margin-bottom:100px;
-  box-shadow:0 4px 15px rgba(0,0,0,0.1);
-}
-.flex-column > label { color:#151717; font-weight:700; font-size:20px; margin-bottom:6px; }
+    .feature-card h3 {
+      font-size: 1.5rem;
+      color: #06C755;
+      margin-bottom: 8px;
+    }
 
-.inputForm { border:1.5px solid #ecedec; border-radius:12px; display:flex; align-items:center; padding-left:10px; transition:0.2s ease-in-out; }
-.large-input { font-size:1.2rem; border:none; border-radius:10px; width:100%; background:transparent; padding:8px 10px; }
-select.large-input { height:50px; }
-textarea.large-input { height:100px; padding:8px; resize:vertical; }
-.inputForm:focus-within { border:1.5px solid #2d79f3; }
+    .feature-card p {
+      font-size: 1rem;
+      color: #111;
+    }
 
-.button-submit {
-  margin:20px 0 0 0; background-color:#151717; border:none; color:#fff; font-size:22px; font-weight:700; border-radius:12px; height:60px; width:100%; cursor:pointer; transition:0.2s;
-}
-.button-submit:hover { background-color:#252727; }
+    /* ===== Button ===== */
+    .btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      background-color: #06C755;
+      color: #fff;
+      transition: background 0.2s;
+    }
+    .btn:hover { background-color: #049645; }
 
-#result { text-align:center; margin-top:16px; font-weight:bold; font-size:20px; }
-.success { color:green; }
-.error { color:red; }
+    /* ===== Dropdown Button ===== */
+    .dropdown {
+      position: relative;
+      width: 100%;
+    }
+    .dropdown-btn {
+      width: 100%;
+      text-align: left;
+      padding: 12px 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1.2rem;
+      background-color: #fff;
+      cursor: pointer;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #fff;
+      width: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      z-index: 10;
+    }
+    .dropdown-content div {
+      padding: 10px;
+      cursor: pointer;
+    }
+    .dropdown-content div:hover {
+      background-color: #06C755;
+      color: #fff;
+    }
 
-/* Note input */
-.note-inputForm { border:1.5px solid #ecedec; border-radius:12px; display:flex; align-items:flex-start; padding:0; height:120px; transition:0.2s ease-in-out; }
-.note-textarea { font-size:1rem; border:none; border-radius:12px; width:100%; background:transparent; padding:8px; resize:vertical; outline:none; }
-.note-inputForm:focus-within { border:1.5px solid #2d79f3; }
+    /* ===== Input / Textarea ===== */
+    input.large-input, textarea.large-input {
+      width: 100%;
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    textarea.large-input { resize: vertical; height: 120px; }
 
-/* Responsive */
-@media(max-width:480px){
-  .form { width:90%; padding:20px; margin-bottom:60px; }
-  .button-submit { font-size:18px; height:50px; }
-  .flex-column > label { font-size:16px; }
-  #result { font-size:16px; }
-}
-</style>
+    /* ===== Result ===== */
+    #result {
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 12px;
+    }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
 </head>
 <body>
 
-<!-- Video Intro -->
-<video autoplay muted playsinline preload="auto" id="introVideo">
-  <source src="https://firebasestorage.googleapis.com/v0/b/sekkport.appspot.com/o/download%20(1).mp4?alt=media&token=1b3737eb-e095-4791-8142-ffef52b963d0" type="video/mp4">
-  เบราว์เซอร์ของคุณไม่รองรับการเล่นวิดีโอ
-</video>
+  <div id="mainContainer">
 
-<!-- Main Container -->
-<div id="mainContainer">
-  <form class="form" id="checkInForm">
-    <div class="flex-column">
-      <label>เลือกชื่อเจ้าหน้าที่</label>
-    </div>
-    <div class="inputForm">
-      <select class="large-input" id="employeeSelect">
-        <option value="">-- เลือกชื่อ --</option>
-      </select>
-    </div>
+    <!-- Card สำหรับเช็คชื่อ -->
+    <div class="feature-card">
+      <h3>เช็คชื่อพนักงาน</h3>
 
-    <div class="flex-column">
-      <label>รายละเอียดเพิ่มเติม (ไม่บังคับ)</label>
-    </div>
-    <div class="note-inputForm">
-      <textarea class="note-textarea" id="note" placeholder="ใส่เหตุผลหรือข้อความเพิ่มเติม..."></textarea>
+      <!-- ปุ่ม Dropdown เลือกชื่อ -->
+      <div class="dropdown">
+        <div class="dropdown-btn" id="dropdownBtn">-- เลือกชื่อเจ้าหน้าที่ --</div>
+        <div class="dropdown-content" id="employeeList"></div>
+      </div>
+
+      <!-- ช่องกรอกรายละเอียดเพิ่มเติม -->
+      <textarea class="large-input" id="note" placeholder="รายละเอียดเพิ่มเติม (ไม่บังคับ)"></textarea>
+
+      <!-- ปุ่มเช็คชื่อ -->
+      <button class="btn" onclick="checkInEmployee()">เช็คชื่อเข้า</button>
+
+      <!-- ข้อความผลลัพธ์ -->
+      <div id="result"></div>
     </div>
 
-    <button type="button" class="button-submit" onclick="checkInEmployee()">เช็คชื่อเข้า</button>
-    <div id="result"></div>
-  </form>
+  </div>
 
+  <!-- เสียง -->
   <audio id="successSound" src="https://firebasestorage.googleapis.com/v0/b/sekkport.appspot.com/o/new-notification-015-363677.mp3?alt=media&token=74f2ee1e-021a-4306-9d18-fcbe5d06291b"></audio>
   <audio id="errorSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
-</div>
 
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbxeI_8mx6kjznc5NuJ1u59dCP2dAFgFwLUUOHr06TjpnlKrfkg2ffMYdV1GvLGxtLEC/exec";
+  <script>
+    const deploymentURL = 'https://script.google.com/macros/s/AKfycbxeI_8mx6kjznc5NuJ1u59dCP2dAFgFwLUUOHr06TjpnlKrfkg2ffMYdV1GvLGxtLEC/exec';
 
-// เมื่อวิดีโอจบ ให้โชว์เว็บหลัก
-const intro = document.getElementById("introVideo");
-const main = document.getElementById("mainContainer");
-intro.onended = () => {
-  intro.remove();
-  main.style.visibility = "visible";
-  main.style.opacity = "1";
-};
+    let selectedStaffId = '';
+    let selectedStaffName = '';
 
-// โหลดรายชื่อพนักงาน
-async function loadEmployees() {
-  try {
-    const res = await fetch(API_URL + "?action=getEmployees");
-    const employees = await res.json();
-    const select = document.getElementById("employeeSelect");
-    employees.forEach(emp => {
-      const option = document.createElement("option");
-      option.value = emp.id;
-      option.textContent = emp.name;
-      select.appendChild(option);
-    });
-  } catch(err) {
-    console.error("ไม่สามารถโหลดรายชื่อพนักงานได้:", err);
-    document.getElementById("result").textContent = "❌ โหลดรายชื่อพนักงานล้มเหลว";
-    document.getElementById("result").className = "error";
-  }
-}
+    // โหลดรายชื่อพนักงานจาก GAS
+    function loadEmployees() {
+      fetch(`${deploymentURL}?action=getEmployees`)
+        .then(res => res.json())
+        .then(data => {
+          const list = document.getElementById('employeeList');
+          data.forEach(emp => {
+            const div = document.createElement('div');
+            div.textContent = emp.name + " - " + emp.id;
+            div.dataset.id = emp.id;
+            div.dataset.name = emp.name;
+            div.onclick = () => {
+              selectedStaffId = emp.id;
+              selectedStaffName = emp.name;
+              document.getElementById('dropdownBtn').textContent = emp.name;
+              list.style.display = 'none';
+            };
+            list.appendChild(div);
+          });
+        });
+    }
 
-// เช็คชื่อ
-async function checkInEmployee() {
-  const select = document.getElementById("employeeSelect");
-  const staffId = select.value;
-  const name = select.options[select.selectedIndex].text;
-  const note = document.getElementById("note").value;
-  const resultDiv = document.getElementById("result");
+    // Toggle dropdown
+    document.getElementById('dropdownBtn').onclick = () => {
+      const list = document.getElementById('employeeList');
+      list.style.display = list.style.display === 'block' ? 'none' : 'block';
+    }
 
-  if(!staffId){
-    resultDiv.textContent = "กรุณาเลือกชื่อก่อน!";
-    resultDiv.className = "error";
-    document.getElementById("errorSound").play();
-    return;
-  }
+    // ฟังก์ชันเช็คชื่อ
+    function checkInEmployee() {
+      const note = document.getElementById('note').value;
+      const resultDiv = document.getElementById('result');
 
-  try{
-    const res = await fetch(`${API_URL}?action=checkIn&name=${encodeURIComponent(name)}&staffId=${encodeURIComponent(staffId)}&note=${encodeURIComponent(note)}`);
-    const response = await res.json();
-    resultDiv.textContent = response.msg;
-    resultDiv.className = response.status === "success" ? "success" : "error";
-    if(response.status === "success") document.getElementById("successSound").play();
-    else document.getElementById("errorSound").play();
-  } catch(err){
-    console.error(err);
-    resultDiv.textContent = "❌ เกิดข้อผิดพลาด";
-    resultDiv.className = "error";
-    document.getElementById("errorSound").play();
-  }
-}
+      if (!selectedStaffId) {
+        resultDiv.textContent = "กรุณาเลือกชื่อก่อน!";
+        resultDiv.className = "error";
+        document.getElementById('errorSound').play();
+        return;
+      }
 
-// เริ่มโหลด
-loadEmployees();
-</script>
+      fetch(`${deploymentURL}?action=checkIn&name=${encodeURIComponent(selectedStaffName)}&staffId=${encodeURIComponent(selectedStaffId)}&note=${encodeURIComponent(note)}`)
+        .then(res => res.json())
+        .then(response => {
+          resultDiv.textContent = response.msg;
+          resultDiv.className = response.status === "success" ? "success" : "error";
+          if(response.status === "success"){
+            document.getElementById('successSound').play();
+          } else {
+            document.getElementById('errorSound').play();
+          }
+        });
+    }
+
+    loadEmployees();
+  </script>
 </body>
 </html>
