@@ -158,7 +158,7 @@
   <div class="dropdown">
     <div class="dropdown-btn" id="dropdownBtn">-- เลือกชื่อเจ้าหน้าที่ --</div>
     <div class="dropdown-content" id="employeeList">
-      <!-- รายชื่อพนักงานจะใส่ script -->
+      <!-- รายชื่อพนักงานจาก GAS -->
     </div>
   </div>
 
@@ -178,34 +178,32 @@
   <audio id="errorSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
 
   <script>
-    // ตัวอย่าง array พนักงาน ถ้า deploy จริงใช้ fetch จาก Google Apps Script
-    const employees = [
-      {id: "001", name: "นาง กัณฑ์กนกนรี ปิติภัทรพิรุฬห์"},
-      {id: "002", name: "นางสาว พิชญทิพย์ แสงทอง"},
-      {id: "003", name: "นาย สมชาย ใจดี"},
-      {id: "004", name: "นางสาว สุกัญญา มาลี"},
-      {id: "005", name: "นาย กิตติพงษ์ วิริยะ"}
-    ];
+    const deploymentURL = 'YOUR_DEPLOYMENT_URL_HERE'; // ใส่ URL ของ Web App GAS
 
     let selectedStaffId = '';
     let selectedStaffName = '';
 
     function loadEmployees() {
-      const list = document.getElementById('employeeList');
-      list.innerHTML = '';
-      employees.forEach(emp => {
-        const div = document.createElement('div');
-        div.textContent = emp.name;
-        div.dataset.id = emp.id;
-        div.dataset.name = emp.name;
-        div.onclick = () => {
-          selectedStaffId = emp.id;
-          selectedStaffName = emp.name;
-          document.getElementById('dropdownBtn').textContent = emp.name;
-          list.style.display = 'none';
-        };
-        list.appendChild(div);
-      });
+      fetch(`${deploymentURL}?action=getEmployees`)
+        .then(res => res.json())
+        .then(data => {
+          const list = document.getElementById('employeeList');
+          list.innerHTML = '';
+          data.forEach(emp => {
+            const div = document.createElement('div');
+            div.textContent = emp.name;
+            div.dataset.id = emp.id;
+            div.dataset.name = emp.name;
+            div.onclick = () => {
+              selectedStaffId = emp.id;
+              selectedStaffName = emp.name;
+              document.getElementById('dropdownBtn').textContent = emp.name;
+              list.style.display = 'none';
+            };
+            list.appendChild(div);
+          });
+        })
+        .catch(err => console.error(err));
     }
 
     document.getElementById('dropdownBtn').onclick = () => {
@@ -224,13 +222,23 @@
         return;
       }
 
-      // ตัวอย่างการตอบกลับจำลอง
-      resultDiv.textContent = `เช็คชื่อ ${selectedStaffName} เรียบร้อย!`;
-      resultDiv.className = "success";
-      document.getElementById('successSound').play();
+      fetch(`${deploymentURL}?action=checkIn&name=${encodeURIComponent(selectedStaffName)}&staffId=${encodeURIComponent(selectedStaffId)}&note=${encodeURIComponent(note)}`)
+        .then(res => res.json())
+        .then(response => {
+          resultDiv.textContent = response.msg;
+          resultDiv.className = response.status === "success" ? "success" : "error";
+          if(response.status === "success"){
+            document.getElementById('successSound').play();
+          } else {
+            document.getElementById('errorSound').play();
+          }
+        })
+        .catch(err => console.error(err));
     }
 
+    // โหลดพนักงานเมื่อหน้าเว็บเปิด
     loadEmployees();
   </script>
+
 </body>
 </html>
