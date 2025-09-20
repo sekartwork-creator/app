@@ -5,145 +5,92 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ระบบเช็คชื่อเข้า-ออกงาน</title>
   <style>
-    /* ===== Body ===== */
+    /* ===== Body (จัดกลางทั้งแนวตั้ง/แนวนอน) ===== */
     body {
       margin: 0;
-      padding: 0;
+      padding: 20px;
       font-family: 'Kanit', sans-serif;
       background-color: #fff;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      overflow: hidden;
-    }
-
-    /* ===== Card ===== */
-    .card {
-      width: 95%;
-      max-width: 500px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      background-color: #fff;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       box-sizing: border-box;
     }
 
     /* ===== Header ===== */
     h2 {
-      text-align: center;
       color: #06C755;
       font-weight: 700;
-      margin-top: 0;
+      margin-bottom: 20px;
+      text-align: center;
     }
 
     /* ===== LINE Login ===== */
     .login-line {
       font-weight: 700;
       color: #000;
-      text-align: left;
+      width: 100%;
+      max-width: 400px;
       margin-bottom: 10px;
-      background: none; /* ไม่มีกรอบ */
-      border: none;
+      text-align: left;
     }
 
-    /* ===== Dropdown ===== */
-    .dropdown {
-      position: relative;
+    /* ===== Dropdown / Textarea ===== */
+    select, textarea {
       width: 100%;
-    }
-
-    .dropdown-btn {
-      width: 100%;
+      max-width: 400px;
       padding: 15px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      border: 1.5px solid #ccc;     /* เส้นขอบ */
+      border-radius: 10px;          /* ขอบโค้งมน */
       font-size: 1rem;
-      cursor: pointer;
-      background-color: #f9f9f9;
+      background: #f9f9f9;          /* พื้นหลังจางๆ */
+      outline: none;
       box-sizing: border-box;
     }
 
-    .dropdown-btn:hover {
-      background-color: #e0f4d9;
+    select:focus, textarea:focus {
+      border: 1.5px solid #06C755;  /* เน้นสีเขียวตอนเลือก */
+      background: #fff;
     }
 
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      width: 100%;
-      max-height: 200px;
-      overflow-y: auto;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      z-index: 100;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    /* Placeholder ให้เป็นสีเทาบางๆ */
+    textarea::placeholder {
+      color: #aaa;
+      font-style: italic;
     }
 
-    .dropdown-content div {
-      padding: 12px 20px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .dropdown-content div:hover {
-      background-color: #06C755;
-      color: #fff;
-    }
-
-    /* ===== Textarea ===== */
     textarea {
-      width: 100%;
-      padding: 15px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
       resize: none;
-      height: 120px;
-      box-sizing: border-box;
+      height: 80px;
     }
 
     /* ===== Button ===== */
     .btn {
+      width: 100%;
+      max-width: 400px;
       padding: 15px;
-      border-radius: 12px;
       border: none;
+      border-radius: 10px;
       background-color: #06C755;
       color: #fff;
       font-size: 1.2rem;
       font-weight: 700;
       cursor: pointer;
-      transition: 0.3s;
+      margin-top: 10px;
     }
 
     .btn:hover {
       background-color: #049645;
     }
 
-    /* ===== Result ===== */
-    #result {
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-
-    .success { color: green; }
-    .error { color: red; }
-
     /* ===== Footer ===== */
     footer {
-      margin-top: auto;
+      margin-top: 30px;
       font-size: 0.85rem;
       color: #666;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
       text-align: center;
     }
 
@@ -159,31 +106,32 @@
   </style>
 </head>
 <body>
-  <div class="card">
-    <h2>เช็คชื่อพนักงาน</h2>
 
-    <div class="login-line">Log in with LINE Business ID</div>
+  <h2>เช็คชื่อพนักงาน</h2>
 
-    <div class="dropdown">
-      <div class="dropdown-btn" id="dropdownBtn">-- เลือกชื่อเจ้าหน้าที่ --</div>
-      <div class="dropdown-content" id="employeeList">
-        <!-- รายชื่อพนักงานจะใส่ script -->
-      </div>
+  <div class="login-line">Log in with LINE Business ID</div>
+
+  <select id="employeeList">
+    <option value="">-- เลือกชื่อเจ้าหน้าที่ --</option>
+    <!-- รายชื่อพนักงานจาก script -->
+  </select>
+
+  <textarea id="note" placeholder="รายละเอียดเพิ่มเติม (ไม่บังคับ)"></textarea>
+
+  <button class="btn">เช็คชื่อเข้า</button>
+  <div id="result"></div>
+
+  <footer>
+    <div>About Business ID</div>
+    <div>
+      <a href="#">Help</a> |
+      <a href="#">Terms of Use</a>
     </div>
+  </footer>
 
-    <textarea id="note" placeholder="รายละเอียดเพิ่มเติม (ไม่บังคับ)"></textarea>
+</body>
+</html>
 
-    <button class="btn">เช็คชื่อเข้า</button>
-    <div id="result"></div>
-
-    <footer>
-      <div>About Business ID</div>
-      <div>
-        <a href="#">Help</a> |
-        <a href="#">Terms of Use</a>
-      </div>
-    </footer>
-  </div>
 
 
 <audio id="successSound" src="https://firebasestorage.googleapis.com/v0/b/sekkport.appspot.com/o/new-notification-015-363677.mp3?alt=media&token=74f2ee1e-021a-4306-9d18-fcbe5d06291b"></audio>
@@ -250,6 +198,7 @@
 </script>
 </body>
 </html>
+
 
 
 
