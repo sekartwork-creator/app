@@ -7,158 +7,105 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap');
 
-/* ===== Body ===== */
-body {                              /* กำหนดพื้นหลัง, font, จัดกลาง */
-  margin: 0;                         /* ลบ margin เริ่มต้น */
-  padding: 0;                        /* ลบ padding เริ่มต้น */
-  font-family: 'Kanit', sans-serif;  /* ใช้ฟอนต์ Kanit */
-  background-color: #fff;            /* พื้นหลังสีขาว */
-  display: flex;                     /* ใช้ flexbox */
-  justify-content: center;           /* จัด horizontal กึ่งกลาง */
-  align-items: center;               /* จัด vertical กึ่งกลาง */
-  min-height: 100vh;                 /* ความสูงเต็มจอ */
-  overflow: hidden;                  /* ป้องกัน scroll */
-}
+ /* ===== Body (จัดกลางทั้งแนวตั้ง/แนวนอน) ===== */
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Kanit', sans-serif;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
 
-/* ===== Card ===== */
-.card {                             /* กล่องหลัก */
-  width: 100%;                        /* กว้าง 95% ของหน้าจอ */
-  max-width: 500px;                  /* สูงสุด 500px */
-  padding: 20px;                     /* ช่องว่างด้านใน */
-  display: flex;                     /* ใช้ flexbox */
-  flex-direction: column;            /* จัดเป็นแนวตั้ง */
-  gap: 15px;                         /* ช่องว่างระหว่าง element */
-  background-color: #fff;            /* พื้นหลังสีขาว */
-  border-radius: 20px;               /* มุมโค้ง */
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1); /* เงา */
-  box-sizing: border-box;            /* รวม padding ใน width */
-}
+    /* ===== Header ===== */
+    h2 {
+      color: #06C755;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-align: center;
+    }
 
-/* ===== Header ===== */
-h2 {                                /* หัวเรื่อง */
-  text-align: center;                /* กึ่งกลาง */
-  color: #06C755;                    /* สีเขียว */
-  font-weight: 700;                  /* ตัวหนา */
-  margin-top: 0;                     /* ลบ margin บน */
-}
+    /* ===== LINE Login ===== */
+    .login-line {
+      font-weight: 700;
+      color: #000;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
 
-/* ===== LINE Login ===== */
-.login-line {                        /* ข้อความ Log in with LINE Business ID */
-  font-weight: 700;                  /* ตัวหนา */
-  color: #000;                        /* สีดำ */
-  text-align: left;                  /* ชิดซ้าย */
-  padding-left: 0;                   /* ไม่มี padding ซ้าย */
-  margin-bottom: 10px;               /* ช่องว่างด้านล่าง */
-  background: none;                  /* ไม่มีพื้นหลัง */
-  border: none;                      /* ไม่มีกรอบ */
-}
+    /* ===== Dropdown / Textarea ===== */
+    select, textarea {
+      width: 100%;
+      max-width: 400px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1.5px solid #ccc;     /* เส้นขอบ */
+      border-radius: 10px;          /* ขอบโค้งมน */
+      font-size: 1rem;
+      background: #f9f9f9;          /* พื้นหลังจางๆ */
+      outline: none;
+      box-sizing: border-box;
+    }
 
-/* ===== Dropdown ===== */
-.dropdown {                           /* กล่อง dropdown */
-  position: relative;                 /* สำหรับ dropdown-content */
-  width: 100%;                        /* เต็มความกว้าง card */
-}
+    select:focus, textarea:focus {
+      border: 1.5px solid #06C755;  /* เน้นสีเขียวตอนเลือก */
+      background: #fff;
+    }
 
-.dropdown-btn {                        /* ปุ่ม dropdown */
-  width: 100%;                         /* เต็มความกว้าง parent */
-  padding: 15px;                       /* ช่องว่างด้านใน */
-  border-radius: 12px;                 /* มุมโค้ง */
-  border: 1px solid #ccc;              /* เส้นกรอบ */
-  font-size: 1rem;                     /* ขนาดตัวอักษร */
-  cursor: pointer;                     /* เคอร์เซอร์ pointer */
-  background-color: #f9f9f9;          /* สีพื้นหลัง */
-  box-sizing: border-box;              /* รวม padding ใน width */
-}
+    /* Placeholder ให้เป็นสีเทาบางๆ */
+    textarea::placeholder {
+      color: #aaa;
+      font-style: italic;
+    }
 
-.dropdown-btn:hover {                   /* hover ปุ่ม dropdown */
-  background-color: #e0f4d9;           /* สีเขียวอ่อน */
-}
+    textarea {
+      resize: none;
+      height: 80px;
+    }
 
-.dropdown-content {                     /* รายการ dropdown */
-  display: none;                        /* ซ่อนเริ่มต้น */
-  position: absolute;                   /* absolute ใน parent */
-  top: 100%;                            /* อยู่ใต้ปุ่ม */
-  left: 0;                              /* ชิดซ้าย */
-  width: 100%;                          /* เต็มปุ่ม */
-  max-height: 200px;                    /* สูงสุด 200px */
-  overflow-y: auto;                     /* scroll vertical */
-  background-color: #fff;               /* พื้นหลังสีขาว */
-  border: 1px solid #ccc;               /* เส้นกรอบ */
-  border-radius: 12px;                  /* มุมโค้ง */
-  z-index: 100;                         /* อยู่เหนือ element อื่น */
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* เงา */
-}
+    /* ===== Button ===== */
+    .btn {
+      width: 100%;
+      max-width: 400px;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background-color: #06C755;
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 10px;
+    }
 
-.dropdown-content div {                  /* รายการแต่ละ item */
-  padding: 12px 20px;                   /* ช่องว่าง */
-  cursor: pointer;                      /* pointer */
-  transition: 0.2s;                     /* transition hover */
-}
+    .btn:hover {
+      background-color: #049645;
+    }
 
-.dropdown-content div:hover {            /* hover รายการ */
-  background-color: #06C755;            /* สีเขียว */
-  color: #fff;                          /* ตัวอักษรสีขาว */
-}
+    /* ===== Footer ===== */
+    footer {
+      margin-top: 30px;
+      font-size: 0.85rem;
+      color: #666;
+      text-align: center;
+    }
 
-/* ===== Textarea ===== */
-textarea {                              /* ช่องหมายเหตุ */
-  width: 100%;                           /* เต็มความกว้าง card */
-  padding: 15px;                         /* ช่องว่างด้านใน */
-  border-radius: 12px;                   /* มุมโค้ง */
-  border: 1px solid #ccc;                /* เส้นกรอบ */
-  font-size: 1rem;                       /* ขนาดตัวอักษร */
-  resize: none;                          /* ปิด resize */
-  height: 120px;                          /* สูง 120px */
-  box-sizing: border-box;                 /* รวม padding ใน width */
-}
+    footer a {
+      color: #06C755;
+      text-decoration: none;
+      margin: 0 5px;
+    }
 
-/* ===== Button ===== */
-.btn {                                   /* ปุ่มเช็คชื่อ */
-  padding: 15px;                          /* ช่องว่าง */
-  border-radius: 12px;                     /* มุมโค้ง */
-  border: none;                            /* ไม่มีกรอบ */
-  background-color: #06C755;              /* สีเขียว */
-  color: #fff;                             /* ตัวอักษรสีขาว */
-  font-size: 1.2rem;                       /* ตัวอักษรใหญ่ */
-  font-weight: 700;                        /* ตัวหนา */
-  cursor: pointer;                         /* pointer */
-  transition: 0.3s;                        /* transition hover */
-}
+    footer a:hover {
+      text-decoration: underline;
+    }
 
-.btn:hover {                              /* hover ปุ่ม */
-  background-color: #049645;              /* สีเขียวเข้ม */
-}
-
-/* ===== Result ===== */
-#result {                                 /* แสดงผลหลังเช็คชื่อ */
-  text-align: center;                     /* กึ่งกลาง */
-  font-size: 1.2rem;                      /* ตัวอักษรใหญ่ */
-  font-weight: 700;                        /* ตัวหนา */
-}
-
-.success { color: green; }                /* ข้อความสำเร็จสีเขียว */
-.error { color: red; }                    /* ข้อความผิดพลาดสีแดง */
-
-/* ===== Footer ===== */
-footer {                                  /* Footer */
-  margin-top: auto;                        /* ดันลงล่าง */
-  font-size: 0.85rem;                      /* ตัวอักษรเล็ก */
-  color: #666;                             /* สีเทาอ่อน */
-  display: flex;                            /* ใช้ flex */
-  flex-direction: column;                  /* แนวตั้ง */
-  gap: 5px;                                /* ช่องว่าง */
-  text-align: center;                       /* กึ่งกลาง */
-}
-
-footer a {                                 /* ลิงก์ footer */
-  color: #06C755;                           /* สีเขียว */
-  text-decoration: none;                     /* ไม่มีเส้นใต้ */
-  margin: 0 5px;                             /* ช่องว่างซ้ายขวา */
-}
-
-footer a:hover {                           /* hover ลิงก์ footer */
-  text-decoration: underline;              /* มีเส้นใต้ */
-}
 
 
 </style>
@@ -254,6 +201,7 @@ footer a:hover {                           /* hover ลิงก์ footer */
 </script>
 </body>
 </html>
+
 
 
 
