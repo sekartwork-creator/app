@@ -1,215 +1,205 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบเช็คชื่อเข้า-ออกงาน</title>
-  <style>
-    /* ===== BODY ===== */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Kanit', sans-serif;
-      background-color: #f5f5f5;
-      color: #111;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบเช็คชื่อเข้า-ออกงาน</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap');
 
-    /* ===== Container หลัก ===== */
-    #mainContainer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      padding: 20px;
-      box-sizing: border-box;
-    }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Kanit', sans-serif;
+    background: linear-gradient(135deg, #06C755, #67BB05);
+    color: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
 
-    /* ===== Card ===== */
-    .feature-card {
-      width: 100%;
-      max-width: 500px; /* mobile friendly */
-      background-color: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      padding: 20px;
-      margin-bottom: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+  .card {
+    width: 95%;
+    max-width: 500px;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 30px 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    animation: fadeIn 0.8s ease;
+  }
 
-    .feature-card h3 {
-      font-size: 1.5rem;
-      color: #06C755;
-      margin-bottom: 8px;
-    }
+  @keyframes fadeIn {
+    from {opacity:0; transform: translateY(20px);}
+    to {opacity:1; transform: translateY(0);}
+  }
 
-    .feature-card p {
-      font-size: 1rem;
-      color: #111;
-    }
+  h2 {
+    text-align: center;
+    color: #06C755;
+    font-weight: 700;
+  }
 
-    /* ===== Button ===== */
-    .btn {
-      padding: 12px 20px;
-      border-radius: 8px;
-      border: none;
-      font-size: 1.2rem;
-      cursor: pointer;
-      background-color: #06C755;
-      color: #fff;
-      transition: background 0.2s;
-    }
-    .btn:hover { background-color: #049645; }
+  .dropdown {
+    position: relative;
+    width: 100%;
+  }
 
-    /* ===== Dropdown Button ===== */
-    .dropdown {
-      position: relative;
-      width: 100%;
-    }
-    .dropdown-btn {
-      width: 100%;
-      text-align: left;
-      padding: 12px 20px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 1.2rem;
-      background-color: #fff;
-      cursor: pointer;
-    }
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #fff;
-      width: 100%;
-      max-height: 200px;
-      overflow-y: auto;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      z-index: 10;
-    }
-    .dropdown-content div {
-      padding: 10px;
-      cursor: pointer;
-    }
-    .dropdown-content div:hover {
-      background-color: #06C755;
-      color: #fff;
-    }
+  .dropdown-btn {
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 1.2rem;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: 0.3s;
+  }
 
-    /* ===== Input / Textarea ===== */
-    input.large-input, textarea.large-input {
-      width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-    textarea.large-input { resize: vertical; height: 120px; }
+  .dropdown-btn:hover {
+    background-color: #e0f4d9;
+  }
 
-    /* ===== Result ===== */
-    #result {
-      text-align: center;
-      font-weight: bold;
-      font-size: 1.2rem;
-      margin-top: 12px;
-    }
-    .success { color: green; }
-    .error { color: red; }
-  </style>
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    z-index: 100;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+
+  .dropdown-content div {
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .dropdown-content div:hover {
+    background-color: #06C755;
+    color: #fff;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    resize: vertical;
+    height: 120px;
+  }
+
+  .btn {
+    padding: 15px;
+    border-radius: 12px;
+    border: none;
+    background-color: #06C755;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .btn:hover {
+    background-color: #049645;
+  }
+
+  #result {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  .success { color: green; }
+  .error { color: red; }
+</style>
 </head>
 <body>
 
-  <div id="mainContainer">
+<div class="card">
+  <h2>เช็คชื่อพนักงาน</h2>
 
-    <!-- Card สำหรับเช็คชื่อ -->
-    <div class="feature-card">
-      <h3>เช็คชื่อพนักงาน</h3>
-
-      <!-- ปุ่ม Dropdown เลือกชื่อ -->
-      <div class="dropdown">
-        <div class="dropdown-btn" id="dropdownBtn">-- เลือกชื่อเจ้าหน้าที่ --</div>
-        <div class="dropdown-content" id="employeeList"></div>
-      </div>
-
-      <!-- ช่องกรอกรายละเอียดเพิ่มเติม -->
-      <textarea class="large-input" id="note" placeholder="รายละเอียดเพิ่มเติม (ไม่บังคับ)"></textarea>
-
-      <!-- ปุ่มเช็คชื่อ -->
-      <button class="btn" onclick="checkInEmployee()">เช็คชื่อเข้า</button>
-
-      <!-- ข้อความผลลัพธ์ -->
-      <div id="result"></div>
-    </div>
-
+  <div class="dropdown">
+    <div class="dropdown-btn" id="dropdownBtn">-- เลือกชื่อเจ้าหน้าที่ --</div>
+    <div class="dropdown-content" id="employeeList"></div>
   </div>
 
-  <!-- เสียง -->
-  <audio id="successSound" src="https://firebasestorage.googleapis.com/v0/b/sekkport.appspot.com/o/new-notification-015-363677.mp3?alt=media&token=74f2ee1e-021a-4306-9d18-fcbe5d06291b"></audio>
-  <audio id="errorSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
+  <textarea id="note" placeholder="รายละเอียดเพิ่มเติม (ไม่บังคับ)"></textarea>
+  <button class="btn" onclick="checkInEmployee()">เช็คชื่อเข้า</button>
+  <div id="result"></div>
+</div>
 
-  <script>
-    const deploymentURL = 'https://script.google.com/macros/s/AKfycbxeI_8mx6kjznc5NuJ1u59dCP2dAFgFwLUUOHr06TjpnlKrfkg2ffMYdV1GvLGxtLEC/exec';
+<audio id="successSound" src="https://firebasestorage.googleapis.com/v0/b/sekkport.appspot.com/o/new-notification-015-363677.mp3?alt=media&token=74f2ee1e-021a-4306-9d18-fcbe5d06291b"></audio>
+<audio id="errorSound" src="https://www.soundjay.com/buttons/sounds/button-10.mp3"></audio>
 
-    let selectedStaffId = '';
-    let selectedStaffName = '';
+<script>
+  const deploymentURL = 'https://script.google.com/macros/s/AKfycbxeI_8mx6kjznc5NuJ1u59dCP2dAFgFwLUUOHr06TjpnlKrfkg2ffMYdV1GvLGxtLEC/exec';
 
-    // โหลดรายชื่อพนักงานจาก GAS
-    function loadEmployees() {
-      fetch(`${deploymentURL}?action=getEmployees`)
-        .then(res => res.json())
-        .then(data => {
-          const list = document.getElementById('employeeList');
-          data.forEach(emp => {
-            const div = document.createElement('div');
-            div.textContent = emp.name + " - " + emp.id;
-            div.dataset.id = emp.id;
-            div.dataset.name = emp.name;
-            div.onclick = () => {
-              selectedStaffId = emp.id;
-              selectedStaffName = emp.name;
-              document.getElementById('dropdownBtn').textContent = emp.name;
-              list.style.display = 'none';
-            };
-            list.appendChild(div);
-          });
+  let selectedStaffId = '';
+  let selectedStaffName = '';
+
+  function loadEmployees() {
+    fetch(`${deploymentURL}?action=getEmployees`)
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById('employeeList');
+        data.forEach(emp => {
+          const div = document.createElement('div');
+          div.textContent = emp.name + " - " + emp.id;
+          div.dataset.id = emp.id;
+          div.dataset.name = emp.name;
+          div.onclick = () => {
+            selectedStaffId = emp.id;
+            selectedStaffName = emp.name;
+            document.getElementById('dropdownBtn').textContent = emp.name;
+            list.style.display = 'none';
+          };
+          list.appendChild(div);
         });
+      });
+  }
+
+  document.getElementById('dropdownBtn').onclick = () => {
+    const list = document.getElementById('employeeList');
+    list.style.display = list.style.display === 'block' ? 'none' : 'block';
+  }
+
+  function checkInEmployee() {
+    const note = document.getElementById('note').value;
+    const resultDiv = document.getElementById('result');
+
+    if (!selectedStaffId) {
+      resultDiv.textContent = "กรุณาเลือกชื่อก่อน!";
+      resultDiv.className = "error";
+      document.getElementById('errorSound').play();
+      return;
     }
 
-    // Toggle dropdown
-    document.getElementById('dropdownBtn').onclick = () => {
-      const list = document.getElementById('employeeList');
-      list.style.display = list.style.display === 'block' ? 'none' : 'block';
-    }
+    fetch(`${deploymentURL}?action=checkIn&name=${encodeURIComponent(selectedStaffName)}&staffId=${encodeURIComponent(selectedStaffId)}&note=${encodeURIComponent(note)}`)
+      .then(res => res.json())
+      .then(response => {
+        resultDiv.textContent = response.msg;
+        resultDiv.className = response.status === "success" ? "success" : "error";
+        if(response.status === "success"){
+          document.getElementById('successSound').play();
+        } else {
+          document.getElementById('errorSound').play();
+        }
+      });
+  }
 
-    // ฟังก์ชันเช็คชื่อ
-    function checkInEmployee() {
-      const note = document.getElementById('note').value;
-      const resultDiv = document.getElementById('result');
-
-      if (!selectedStaffId) {
-        resultDiv.textContent = "กรุณาเลือกชื่อก่อน!";
-        resultDiv.className = "error";
-        document.getElementById('errorSound').play();
-        return;
-      }
-
-      fetch(`${deploymentURL}?action=checkIn&name=${encodeURIComponent(selectedStaffName)}&staffId=${encodeURIComponent(selectedStaffId)}&note=${encodeURIComponent(note)}`)
-        .then(res => res.json())
-        .then(response => {
-          resultDiv.textContent = response.msg;
-          resultDiv.className = response.status === "success" ? "success" : "error";
-          if(response.status === "success"){
-            document.getElementById('successSound').play();
-          } else {
-            document.getElementById('errorSound').play();
-          }
-        });
-    }
-
-    loadEmployees();
-  </script>
+  loadEmployees();
+</script>
 </body>
 </html>
